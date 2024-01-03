@@ -1,13 +1,21 @@
-import logo from "./logo.svg";
-import "./App.css";
-import Todo from "./components/Todo";
-import AddTodo from "./components/AddTodo";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import Login from "./components/Login";
+import ProductPage from "./components/ProductPage";
 
 function App() {
   return (
     <div>
-      <AddTodo />
-      <Todo />
+      <Router>
+        <Routes>
+          <Route exact path="/" element={<Login />} />
+          <Route exact path="/products" element={<ProductPage />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
