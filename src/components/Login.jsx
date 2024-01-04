@@ -1,25 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { login } from "../redux/slices/useSlice";
+import {  userSaveApi } from "../redux/slices/useSlice";
+
 
 export default function Login() {
-  const [email, setEmai] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const loginInfo = useSelector((state) => state.users.user);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (loginInfo.isLoggedIn) {
-      navigate("/products");
-    }
-  }, [loginInfo]);
-
-  const submitForm = (e) => {
+  const submitForm = async(e) => {
     e.preventDefault();
-    dispatch(login({ email, password }));
+    try{
+      const response = await dispatch(userSaveApi({ name, password })).unwrap()
+      // The result of dispatching a thunk action is a Promise. Redux toolkit wraps this Promise so that there are no uncaught errors in your component. It always resolves to either a success or failure action. But you can unwrap() the result to use it with a try/catch.
+      navigate("/products")
+    }
+    catch(error){
+      console.log('error',error)
+    }
   };
+
   return (
     <div>
       <form onSubmit={submitForm}>
@@ -28,7 +31,7 @@ export default function Login() {
             <div className="text-[30px] w-2">login</div>
             <div className="flex flex-col gap-[10px] w-[70%]">
               <label htmlFor="email" className="text-[20px] w-1">
-                email
+                name
               </label>
               <input
                 type="text"
@@ -36,7 +39,7 @@ export default function Login() {
                 id=""
                 className="border-[2px] border-black h-[2rem] rounded-[5px]"
                 onChange={(e) => {
-                  setEmai(e.target.value);
+                  setName(e.target.value);
                 }}
               />
             </div>
@@ -54,12 +57,12 @@ export default function Login() {
                 }}
               />
             </div>
-            <button
+           {loginInfo.loader? 'loading': <button
               className="bg-pink-200 w-[10rem] h-[3rem] mt-[2rem] rounded-[10px] hover:bg-pink-400 "
               type="submit"
             >
               login
-            </button>
+            </button>}
           </div>
         </div>
       </form>
