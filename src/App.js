@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import Login from "./components/Login";
 import ProductPage from "./components/ProductPage";
+import P from "./components/P";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route exact path="/" element={<Login />} />
           <Route exact path="/products" element={<ProductPage />} />
+          <Route exact path="/p" element={<P />} />
         </Routes>
       </Router>
     </div>

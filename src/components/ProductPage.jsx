@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getApi } from "../redux/slices/readUsers";
+import { getApi,updateUser,updateApi } from "../redux/slices/readUsers";
+
+const { useContext } = require("react")
 
 export default function ProductPage() {
   const users = useSelector((state) => state.allUsers);
+  const [flag,setFlag] = useState(false)
+  const setName = (name,id) =>{
+    dispatch(updateUser({id,name}))
+  }
   console.log(users);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -18,9 +24,9 @@ export default function ProductPage() {
           <>
             <div className="mb-[10px] flex justify-center items-center">
               <div className="mt-[10px]  shadow-lg p-[30px] rounded-[10px] text-black-500 ">
-                name: <span className="text-black-700">{user?.name}{" "}</span> 
-                <button className=" bg-pink-400 hover:bg-pink-500 p-[10px] rounded-[5px] ml-[10px] mr-[10px] ">
-                  edit
+                name: <input value={user?.name} onChange={(e)=>{setName(e.target.value,user.id)}} className="text-black-700"/>
+                <button onClick={()=>{dispatch(updateApi({id:user.id,name:user?.name}))}} className=" bg-pink-400 hover:bg-pink-500 p-[10px] rounded-[5px] ml-[10px] mr-[10px] ">
+                  save
                 </button>{" "}
                 <button className=" bg-red-400 hover:bg-red-500 p-[10px] ml-[10px] mr-[10px] rounded-[5px] ">
                   delete
@@ -33,3 +39,11 @@ export default function ProductPage() {
     </div>
   );
 }
+
+
+
+
+
+
+
+

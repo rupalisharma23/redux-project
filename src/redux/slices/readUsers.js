@@ -12,6 +12,19 @@ export const getApi = createAsyncThunk('usergetapi',async()=>{
     }
 })
 
+export const updateApi = createAsyncThunk('userputapi',async(data)=>{
+    try{
+      const response = await axios.put(`https://65967d276bb4ec36ca02b939.mockapi.io/api/users/users/${data.id}`,{
+        name:data.name
+      })
+      console.log(response)
+      return data
+    }
+    catch(error){
+     return {id:data.id,error:'error in getApi'}
+    }
+})
+
 export const actionsOnUsers = createSlice({
     name:'oprations',
     initialState:{
@@ -25,7 +38,8 @@ export const actionsOnUsers = createSlice({
            console.log(sate)
         },
         updateUser:(state,action)=>{
-          console.log(state)
+            let temp = state.allUsers.filter((i)=>i.id==action.payload.id)[0]
+            temp.name = action.payload.name
         }
 
     },
@@ -36,12 +50,32 @@ export const actionsOnUsers = createSlice({
 
         .addCase(getApi.fulfilled,(state,action)=>{
             state.loader=false
-            state.allUsers = action.payload
+            let temp = []
+            action.payload.forEach((i)=>{
+                temp.push({...i,loader:false,error:''})
+            })
+            state.allUsers = temp
         })
 
         .addCase(getApi.rejected,(state,action)=>{
             state.loader=false
             state.error = action.payload
+        })
+
+        .addCase(updateApi.pending,(state,action)=>{
+            let temp = state.allUsers.filter((i)=>i.id==action.payload.id)[0]
+            temp.loader=true
+        })
+
+        .addCase(updateApi.fulfilled,(state,action)=>{
+            let temp = state.allUsers.filter((i)=>i.id==action.payload.id)[0]
+            temp.loader=false
+        })
+
+        .addCase(updateApi.rejected,(state,action)=>{
+            let temp = state.allUsers.filter((i)=>i.id==action.payload.id)[0]
+            temp.loader=false
+            temp.error = action.payload.error
         })
     }
 })
